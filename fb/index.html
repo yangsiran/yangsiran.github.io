@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Facebook Page Helper</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <div class="container">
+      <h1>Facebook Page Helper</h1>
+      <div>Have a try for the <a href="app.html">APP version</a> !</div>
+      <br>
+      <form id="query">
+        <input id="postid" type="text" class="form-control" placeholder="Post Id" aria-describedby="basic-addon1" required>
+        <input id="token" type="text" class="form-control" placeholder="Access Token" aria-describedby="basic-addon1" required>
+        <br>
+        <button type="submit" class="btn btn-primary btn-block">GO</button>
+      </form>
+      <br>
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Statistics</h2>
+          <p id="result"></p>
+        </div>
+        <div class="col-md-6">
+          <h2>Data</h2>
+          <button id="export" type="button" class="btn btn-default">Export</button> 
+        </div>
+      </div>
+    </div>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/FileSaver.min.js"></script>
+    <script src="js/xlsx.core.min.js"></script>
+    <script src="js/sheet.js"></script>
+    <script>
+(function() {
+  var wbout, filename;
+  $('#query').submit(function(e) {
+    var id = $('#postid').val(),
+        token = $('#token').val(),
+        $result = $('#result');
+    $result.html('');
+    filename = id;
+    $.getJSON('https://graph.facebook.com/v2.0/' + id + '/comments', {
+        access_token: token,
+        limit: 0,
+        summary: 1
+    }).then(function(data) {
+      return $.getJSON('https://graph.facebook.com/v2.0/' + id + '/comments', {
+          access_token: token,
+          limit: data.summary.total_count,
+          fields: 'created_time,from,message,comments,user_likes,like_count'
+      });
+    }).then(function(data) {
+      var comments = data.data, count = {};
+      for (var i = 0; i < comments.length; ++i) {
+        var name = comments[i].from.name;
+        if (count[name])
+          count[name]++;
+        else
+          count[name] = 1;
+      }
+      var sorted_cnt = [];
+      for (var user in count)
+        sorted_cnt.push({k:user, v:count[user]});
+      sorted_cnt.sort(function(a, b) { return b.v - a.v; });
+      var total = 0;
+      for (var i = 0; i < sorted_cnt.length; ++i) {
+        $result.append(document.createTextNode(sorted_cnt[i].k + ' : ' + sorted_cnt[i].v));
+        $result.append('<br>');
+        total += sorted_cnt[i].v;
+      }
+      $result.append(document.createTextNode('# of total : ' + total));
+
+      var sheet = [['created_time', 'from', 'message', 'replys', 'user_likes', 'like_count']];
+      for (var i = 0; i < comments.length; ++i) {
+        var created_time = new Date(comments[i].created_time),
+            from = comments[i].from.name,
+            message = comments[i].message,
+            replys = [],
+            user_likes = comments[i].user_likes,
+            like_count = comments[i].like_count;
+        if (comments[i].comments) {
+          for (var j = 0; j < comments[i].comments.data.length; ++j) {
+            var reply = comments[i].comments.data[j];
+            replys.push(reply.from.name + ' : ' + reply.message);
+          }
+        }
+        replys = replys.join(', ');
+        sheet.push([created_time, from, message, replys, user_likes, like_count]);
+      }
+
+      ws_name = id;
+      var wb = new Workbook(), ws = sheet_from_array_of_arrays(sheet);
+
+      wb.SheetNames.push(ws_name);
+      wb.Sheets[ws_name] = ws;
+      wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+
+    }).fail(function(e) {
+      $result.html('<div class="alert alert-danger" role="alert">Ahh! Please check your access token.</div>')
+    });
+
+    e.preventDefault();
+  });
+
+  $('#export').click(function () {
+    saveAs(new Blob([s2ab(wbout)],{type:'application/octet-stream'}), filename + '.xlsx')
+  });
+})();
+    </script>
+  </body>
+</html>
