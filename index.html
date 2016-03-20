@@ -206,7 +206,148 @@
             
               
                 
-                <a class="post-title-link" href="/2016/03/20/跟踪Linux内核的启动过程/" itemprop="url">
+                <a class="post-title-link" href="/2016/03/20/系统调用的两种使用方式/" itemprop="url">
+                  系统调用的两种使用方式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-20T14:12:26+08:00" content="2016-03-20">
+              2016-03-20
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程<a href="http://mooc.study.163.com/course/USTC-1000029000" target="_blank" rel="external">http://mooc.study.163.com/course/USTC-1000029000</a></p>
+<p>本文以两段调用Linux系统调用的代码为例分析Linux系统调用的工作方式。</p>
+<h1 id="系统调用的介绍"><a href="#系统调用的介绍" class="headerlink" title="系统调用的介绍"></a>系统调用的介绍</h1><p>系统调用的实际实现方式为由特殊指令 <code>int 0x80</code> 发起一个软中断。CPU捕获到中断后，保存程序的上下文到栈上，包括：</p>
+<ol>
+<li>堆栈顶地址；</li>
+<li>状态字；</li>
+<li><code>cs:eip</code> 的值。</li>
+</ol>
+<p>然后根据中断的类型从中断向量表中选择对应的中断服务例程（ISR）的地址载入<code>cs:eip</code>，CPU进入内核态开始执行ISR。在系统调用的情况下（0x80中断），ISR会根据传入的的系统调用号调用具体的实现函数来响应系统调用。当ISR完成工作后，会从栈上恢复这些上下文。</p>
+<p>在x86架构中，系统调用的参数传递使用寄存器来完成：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Syscall #</th>
+<th style="text-align:center">Param 1</th>
+<th style="text-align:center">Param 2</th>
+<th style="text-align:center">Param 3</th>
+<th style="text-align:center">Param 4</th>
+<th style="text-align:center">Param 5</th>
+<th style="text-align:center">Param 6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">eax</td>
+<td style="text-align:center">ebx</td>
+<td style="text-align:center">ecx</td>
+<td style="text-align:center">edx</td>
+<td style="text-align:center">esi</td>
+<td style="text-align:center">edi</td>
+<td style="text-align:center">ebp</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Return value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">eax</td>
+</tr>
+</tbody>
+</table>
+<p>当然，实际的使用中操作系统通常将系统调用封装成C函数，程序员只需要引入适当的头文件并调用对应的函数即可完成相应的系统调用。而这些封装后的C API的实现上也使用了<code>int $0x80</code>指令来完成具体的工作。</p>
+<h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><p>以下我们分别使用这两种方式来完成对<code>write</code>的系统调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *greeting = <span class="string">"hello, world\n"</span>;</span><br><span class="line">    <span class="keyword">return</span> write(<span class="number">1</span>, greeting, <span class="number">14</span>) &gt;= <span class="number">0</span> ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对<code>int $0x80</code>的直接调用使用内嵌汇编来完成：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *greeting = <span class="string">"hello, world\n"</span>;</span><br><span class="line">    <span class="keyword">int</span> ret;</span><br><span class="line">    <span class="keyword">asm</span> (<span class="string">"mov $1, %%ebx\n\t"</span></span><br><span class="line">         <span class="string">"mov $14, %%edx\n\t"</span></span><br><span class="line">         <span class="string">"mov $4, %%eax\n\t"</span></span><br><span class="line">         <span class="string">"int $0x80\n\t"</span></span><br><span class="line">         <span class="string">"mov %%eax, %0"</span></span><br><span class="line">         : <span class="string">"=m"</span>(ret)</span><br><span class="line">         : <span class="string">"c"</span>(greeting));</span><br><span class="line">    <span class="keyword">return</span> ret &gt;= <span class="number">0</span> ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过对两段程序的编译执行，我们可以看到它们完成了一样的工作。</p>
+<p><img src="/images/sys_call.png" alt="sys_call"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>操作系统内核实际上可以视为由一组ISR组成，CPU捕获到中断后陷入到内核态并进入相应的ISR来响应不同的系统事件。系统调用封装了对底层硬件的操作，由内核完成。其使用也是通过中断这一方式。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/13/跟踪Linux内核的启动过程/" itemprop="url">
                   跟踪Linux内核的启动过程
                 </a>
               
@@ -220,8 +361,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-20T10:51:04+08:00" content="2016-03-20">
-              2016-03-20
+            <time itemprop="dateCreated" datetime="2016-03-13T10:51:04+08:00" content="2016-03-13">
+              2016-03-13
             </time>
           </span>
 
@@ -315,7 +456,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/03/20/一个简单的时间片轮转多道程序内核代码分析/" itemprop="url">
+                <a class="post-title-link" href="/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/" itemprop="url">
                   一个简单的时间片轮转多道程序内核代码分析
                 </a>
               
@@ -329,8 +470,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-20T10:47:43+08:00" content="2016-03-20">
-              2016-03-20
+            <time itemprop="dateCreated" datetime="2016-03-06T10:47:43+08:00" content="2016-03-06">
+              2016-03-06
             </time>
           </span>
 
@@ -420,7 +561,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/03/20/一个简单C程序的反汇编/" itemprop="url">
+                <a class="post-title-link" href="/2016/02/28/一个简单C程序的反汇编/" itemprop="url">
                   一个简单C程序的反汇编
                 </a>
               
@@ -434,8 +575,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-20T10:36:06+08:00" content="2016-03-20">
-              2016-03-20
+            <time itemprop="dateCreated" datetime="2016-02-28T10:36:06+08:00" content="2016-02-28">
+              2016-02-28
             </time>
           </span>
 
@@ -602,7 +743,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">4</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
