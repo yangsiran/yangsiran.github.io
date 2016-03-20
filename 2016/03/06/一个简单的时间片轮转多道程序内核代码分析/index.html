@@ -77,7 +77,7 @@ my_start_kerne">
 <meta property="og:image" content="http://yangsiran.github.com/images/my_schedule_1.png">
 <meta property="og:image" content="http://yangsiran.github.com/images/my_schedule_2.png">
 <meta property="og:image" content="http://yangsiran.github.com/images/qemu.png">
-<meta property="og:updated_time" content="2016-03-20T06:54:00.000Z">
+<meta property="og:updated_time" content="2016-03-20T10:17:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个简单的时间片轮转多道程序内核代码分析">
 <meta name="twitter:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程http://mooc.study.163.com/course/USTC-1000029000
@@ -263,7 +263,7 @@ my_start_kerne">
 
       
         <p>杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程<a href="http://mooc.study.163.com/course/USTC-1000029000" target="_blank" rel="external">http://mooc.study.163.com/course/USTC-1000029000</a></p>
-<p>本文将分析<a href="https://github.com/mengning/mykernel中的一个简单调度器。" target="_blank" rel="external">https://github.com/mengning/mykernel中的一个简单调度器。</a></p>
+<p>本文将分析<a href="https://github.com/mengning/mykernel" target="_blank" rel="external">https://github.com/mengning/mykernel</a>中的一个简单调度器。</p>
 <p>内核的入口为mymain.c中的<code>void __init my_start_kernel(void)</code>，</p>
 <p><img src="/images/my_main.png" alt="my_main"></p>
 <p><code>my_start_kernel</code>初始化了task数组中的4个进程，即四个tPCB结构体。其中pid为进程号（0-3），ip均为my_process的地址，state均为-1（未运行），sp为栈顶位置（tPCB结构中）。所有进程以环形链表的方式组织在一起以便后续轮转调度。</p>
