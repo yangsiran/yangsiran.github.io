@@ -57,23 +57,26 @@
 
 
 
-<meta name="description" content="存储进程信息的task_structsched.h中的task_struct结构体存储了各个进程相关的信息。这个结构体的定义也比较长，并且含有许多根据条件编译的成员。以下截取一些重要的内容，可以看到内核中所使用的数据结构是一些侵入式的十字链表：
-12345678910111213141516171819202122232425262728struct task_struct &amp;#123;  vol">
+<meta name="description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程
+存储进程信息的task_structsched.h中的task_struct结构体存储了各个进程相关的信息。这个结构体的定义也比较长，并且含有许多根据条件编译的成员。以下截取一些重要的内容，可以看到内核中所使用的数据结构是一些侵入式的十字链表：
+1234567891011121314151617181920212223242526">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux内核创建一个新进程的过程">
 <meta property="og:url" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/index.html">
 <meta property="og:site_name" content="Siran Yang | 杨斯然">
-<meta property="og:description" content="存储进程信息的task_structsched.h中的task_struct结构体存储了各个进程相关的信息。这个结构体的定义也比较长，并且含有许多根据条件编译的成员。以下截取一些重要的内容，可以看到内核中所使用的数据结构是一些侵入式的十字链表：
-12345678910111213141516171819202122232425262728struct task_struct &amp;#123;  vol">
+<meta property="og:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程
+存储进程信息的task_structsched.h中的task_struct结构体存储了各个进程相关的信息。这个结构体的定义也比较长，并且含有许多根据条件编译的成员。以下截取一些重要的内容，可以看到内核中所使用的数据结构是一些侵入式的十字链表：
+1234567891011121314151617181920212223242526">
 <meta property="og:image" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/do_fork.png">
 <meta property="og:image" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/dup_task_struct.png">
 <meta property="og:image" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/copy_thread.png">
 <meta property="og:image" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/ret_from_fork.png">
-<meta property="og:updated_time" content="2016-04-04T07:54:05.000Z">
+<meta property="og:updated_time" content="2016-04-04T07:57:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux内核创建一个新进程的过程">
-<meta name="twitter:description" content="存储进程信息的task_structsched.h中的task_struct结构体存储了各个进程相关的信息。这个结构体的定义也比较长，并且含有许多根据条件编译的成员。以下截取一些重要的内容，可以看到内核中所使用的数据结构是一些侵入式的十字链表：
-12345678910111213141516171819202122232425262728struct task_struct &amp;#123;  vol">
+<meta name="twitter:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程
+存储进程信息的task_structsched.h中的task_struct结构体存储了各个进程相关的信息。这个结构体的定义也比较长，并且含有许多根据条件编译的成员。以下截取一些重要的内容，可以看到内核中所使用的数据结构是一些侵入式的十字链表：
+1234567891011121314151617181920212223242526">
 <meta name="twitter:image" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/do_fork.png">
 
 
@@ -251,7 +254,8 @@
       
 
       
-        <h1 id="存储进程信息的task-struct"><a href="#存储进程信息的task-struct" class="headerlink" title="存储进程信息的task_struct"></a>存储进程信息的task_struct</h1><p><a href="http://codelab.shiyanlou.com/xref/linux-3.18.6/include/linux/sched.h#1235" target="_blank" rel="external">sched.h</a>中的<code>task_struct</code>结构体存储了各个进程相关的信息。这个结构体的定义也比较长，并且含有许多根据条件编译的成员。以下截取一些重要的内容，可以看到内核中所使用的数据结构是一些侵入式的十字链表：</p>
+        <p>杨斯然 原创作品转载请注明出处 <a href="http://mooc.study.163.com/course/USTC-1000029000" target="_blank" rel="external">《Linux内核分析》MOOC课程</a></p>
+<h1 id="存储进程信息的task-struct"><a href="#存储进程信息的task-struct" class="headerlink" title="存储进程信息的task_struct"></a>存储进程信息的task_struct</h1><p><a href="http://codelab.shiyanlou.com/xref/linux-3.18.6/include/linux/sched.h#1235" target="_blank" rel="external">sched.h</a>中的<code>task_struct</code>结构体存储了各个进程相关的信息。这个结构体的定义也比较长，并且含有许多根据条件编译的成员。以下截取一些重要的内容，可以看到内核中所使用的数据结构是一些侵入式的十字链表：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> task_struct &#123;</span><br><span class="line">  <span class="keyword">volatile</span> <span class="keyword">long</span> state;	<span class="comment">/* 进程的执行状态 */</span></span><br><span class="line">  <span class="keyword">void</span> *<span class="built_in">stack</span>;	<span class="comment">/* 内核堆栈 */</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">struct</span> list_head tasks;	<span class="comment">/* 所有进程 */</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">struct</span> mm_struct *mm, *active_mm;	<span class="comment">/* 内存相关的信息 */</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">pid_t</span> pid;	<span class="comment">/* 进程的pid */</span></span><br><span class="line">  <span class="keyword">pid_t</span> tgid;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">struct</span> task_struct __rcu *real_parent;	<span class="comment">/* 父进程 */</span></span><br><span class="line">  <span class="keyword">struct</span> task_struct __rcu *parent;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> list_head children;	<span class="comment">/* 子进程 */</span></span><br><span class="line">  <span class="keyword">struct</span> list_head sibling;	<span class="comment">/* 兄弟进程链表 */</span></span><br><span class="line">  <span class="keyword">struct</span> task_struct *group_leader;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">struct</span> signal_struct *signal;	<span class="comment">/* 信号相关信息 */</span></span><br><span class="line">  <span class="keyword">struct</span> sighand_struct *sighand;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">struct</span> thread_struct thread;	<span class="comment">/* CPU相关的进程状态 */</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">struct</span> fs_struct *fs;	<span class="comment">/* 文件系统相关信息 */</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">struct</span> files_struct *files;	<span class="comment">/* 文件相关信息 */</span></span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>thread_struct</code>存储每个进程的CPU相关的一些关键信息，如<em>sp</em>、<em>ip</em>：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> thread_struct &#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>		sp;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>		ip;</span><br><span class="line">	<span class="comment">/* ... */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
