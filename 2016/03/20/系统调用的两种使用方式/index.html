@@ -73,8 +73,8 @@
 
 堆栈顶地址；
 状态字">
-<meta property="og:image" content="http://yangsiran.github.com/images/sys_call.png">
-<meta property="og:updated_time" content="2016-03-20T07:38:08.000Z">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/20/系统调用的两种使用方式/sys_call.png">
+<meta property="og:updated_time" content="2016-04-04T03:04:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="系统调用的两种使用方式">
 <meta name="twitter:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程http://mooc.study.163.com/course/USTC-1000029000
@@ -83,7 +83,7 @@
 
 堆栈顶地址；
 状态字">
-<meta name="twitter:image" content="http://yangsiran.github.com/images/sys_call.png">
+<meta name="twitter:image" content="http://yangsiran.github.com/2016/03/20/系统调用的两种使用方式/sys_call.png">
 
 
 
@@ -311,7 +311,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *greeting = <span class="string">"hello, world\n"</span>;</span><br><span class="line">    <span class="keyword">return</span> write(<span class="number">1</span>, greeting, <span class="number">14</span>) &gt;= <span class="number">0</span> ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>对<code>int $0x80</code>的直接调用使用内嵌汇编来完成：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *greeting = <span class="string">"hello, world\n"</span>;</span><br><span class="line">    <span class="keyword">int</span> ret;</span><br><span class="line">    <span class="keyword">asm</span> (<span class="string">"mov $1, %%ebx\n\t"</span></span><br><span class="line">         <span class="string">"mov $14, %%edx\n\t"</span></span><br><span class="line">         <span class="string">"mov $4, %%eax\n\t"</span></span><br><span class="line">         <span class="string">"int $0x80\n\t"</span></span><br><span class="line">         <span class="string">"mov %%eax, %0"</span></span><br><span class="line">         : <span class="string">"=m"</span>(ret)</span><br><span class="line">         : <span class="string">"c"</span>(greeting));</span><br><span class="line">    <span class="keyword">return</span> ret &gt;= <span class="number">0</span> ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>通过对两段程序的编译执行，我们可以看到它们完成了一样的工作。</p>
-<p><img src="/images/sys_call.png" alt="sys_call"></p>
+<img src="/2016/03/20/系统调用的两种使用方式/sys_call.png" alt="sys_call" title="sys_call">
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>操作系统内核实际上可以视为由一组ISR组成，CPU捕获到中断后陷入到内核态并进入相应的ISR来响应不同的系统事件。系统调用封装了对底层硬件的操作，由内核完成。其使用也是通过中断这一方式。</p>
 
       

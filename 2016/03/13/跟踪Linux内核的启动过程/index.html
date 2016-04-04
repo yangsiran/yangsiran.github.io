@@ -71,19 +71,19 @@
 使用QEMU加载内核镜像，同时指定根文件系统。启动后效果如下：
 
 在QEMU的启动选项中加入-S -s使其在启">
-<meta property="og:image" content="http://yangsiran.github.com/images/booting.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/start_qemu.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/setup_gdb.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/start_kernel.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/src_init_modules1.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/init_modules.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/src_init_modules2.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/rest_init.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/src_rest_init.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/init_process.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/src_idle.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/done.png">
-<meta property="og:updated_time" content="2016-03-20T06:54:04.000Z">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/booting.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/start_qemu.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/setup_gdb.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/start_kernel.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/src_init_modules1.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/init_modules.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/src_init_modules2.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/rest_init.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/src_rest_init.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/init_process.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/src_idle.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/done.png">
+<meta property="og:updated_time" content="2016-04-04T03:05:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="跟踪Linux内核的启动过程">
 <meta name="twitter:description" content="杨斯然 原创作品转载请注明出处《Linux内核分析》MOOC课程http://mooc.study.163.com/course/USTC-1000029000
@@ -91,7 +91,7 @@
 使用QEMU加载内核镜像，同时指定根文件系统。启动后效果如下：
 
 在QEMU的启动选项中加入-S -s使其在启">
-<meta name="twitter:image" content="http://yangsiran.github.com/images/booting.png">
+<meta name="twitter:image" content="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/booting.png">
 
 
 
@@ -271,24 +271,24 @@
         <p>杨斯然 原创作品转载请注明出处《Linux内核分析》MOOC课程<a href="http://mooc.study.163.com/course/USTC-1000029000" target="_blank" rel="external">http://mooc.study.163.com/course/USTC-1000029000</a></p>
 <p>本文结合Linux内核代码3.18.6中的init/main.c部分代码使用gdb跟踪了Linux操作系统的启动过程(部分)。</p>
 <p>使用QEMU加载内核镜像，同时指定根文件系统。启动后效果如下：</p>
-<p><img src="/images/booting.png" alt="booting"></p>
+<img src="/2016/03/13/跟踪Linux内核的启动过程/booting.png" alt="booting" title="booting">
 <p>在QEMU的启动选项中加入<code>-S -s</code>使其在启动时冻结并开放1234端口供gdb调试：</p>
-<p><img src="/images/start_qemu.png" alt="start_qemu"></p>
+<img src="/2016/03/13/跟踪Linux内核的启动过程/start_qemu.png" alt="start_qemu" title="start_qemu">
 <p>进入gdb连接上内核并设置断点在start_kernel处：</p>
-<p><img src="/images/setup_gdb.png" alt="setup_gdb"></p>
-<p> 使用gdb命令c恢复内核运行，内核停止在start_kernel处：<img src="/images/start_kernel.png" alt="start_kernel"></p>
+<img src="/2016/03/13/跟踪Linux内核的启动过程/setup_gdb.png" alt="setup_gdb" title="setup_gdb">
+<p>使用gdb命令c恢复内核运行，内核停止在start_kernel处：<img src="/2016/03/13/跟踪Linux内核的启动过程/start_kernel.png" alt="start_kernel" title="start_kernel"></p>
 <p>start_kernel函数对内核的各个模块进行初始化：</p>
-<p> <img src="/images/src_init_modules1.png" alt="src_init_modules1"></p>
+<img src="/2016/03/13/跟踪Linux内核的启动过程/src_init_modules1.png" alt="src_init_modules1" title="src_init_modules1">
 <p>包括终端、内存、cgroup、console等。</p>
-<p><img src="/images/init_modules.png" alt="init_modules"></p>
-<p><img src="/images/src_init_modules2.png" alt="src_init_modules2"></p>
+<img src="/2016/03/13/跟踪Linux内核的启动过程/init_modules.png" alt="init_modules" title="init_modules">
+<img src="/2016/03/13/跟踪Linux内核的启动过程/src_init_modules2.png" alt="src_init_modules2" title="src_init_modules2">
 <p>start_kernel最后调用的函数为rest_init：</p>
-<p><img src="/images/rest_init.png" alt="rest_init"></p>
-<p> <img src="/images/src_rest_init.png" alt="src_rest_init"></p>
+<img src="/2016/03/13/跟踪Linux内核的启动过程/rest_init.png" alt="rest_init" title="rest_init">
+<img src="/2016/03/13/跟踪Linux内核的启动过程/src_rest_init.png" alt="src_rest_init" title="src_rest_init">
 <p>rest_init中启动了根文件系统中的1号用户态进程，启动的kthread内核线程，在最后进入cpu_idle。</p>
-<p><img src="/images/init_process.png" alt="init_process"></p>
-<p> cpu_idle_loop为0号进程中的一个永久循环，当CPU上没有用户进程被调度时执行：<img src="/images/src_idle.png" alt="src_idle"></p>
-<p>启动完毕，进入用户态： <img src="/images/done.png" alt="done"></p>
+<img src="/2016/03/13/跟踪Linux内核的启动过程/init_process.png" alt="init_process" title="init_process">
+<p>cpu_idle_loop为0号进程中的一个永久循环，当CPU上没有用户进程被调度时执行：<img src="/2016/03/13/跟踪Linux内核的启动过程/src_idle.png" alt="src_idle" title="src_idle"></p>
+<p>启动完毕，进入用户态： <img src="/2016/03/13/跟踪Linux内核的启动过程/done.png" alt="done" title="done"></p>
 
       
     </div>

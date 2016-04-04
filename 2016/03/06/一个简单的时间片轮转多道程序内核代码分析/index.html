@@ -71,13 +71,13 @@ my_start_kerne">
 内核的入口为mymain.c中的void __init my_start_kernel(void)，
 
 my_start_kerne">
-<meta property="og:image" content="http://yangsiran.github.com/images/my_main.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/my_process.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/my_timer_handler.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/my_schedule_1.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/my_schedule_2.png">
-<meta property="og:image" content="http://yangsiran.github.com/images/qemu.png">
-<meta property="og:updated_time" content="2016-03-20T10:17:55.000Z">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_main.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_process.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_timer_handler.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_schedule_1.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_schedule_2.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/qemu.png">
+<meta property="og:updated_time" content="2016-04-04T03:05:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个简单的时间片轮转多道程序内核代码分析">
 <meta name="twitter:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程http://mooc.study.163.com/course/USTC-1000029000
@@ -85,7 +85,7 @@ my_start_kerne">
 内核的入口为mymain.c中的void __init my_start_kernel(void)，
 
 my_start_kerne">
-<meta name="twitter:image" content="http://yangsiran.github.com/images/my_main.png">
+<meta name="twitter:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_main.png">
 
 
 
@@ -265,20 +265,20 @@ my_start_kerne">
         <p>杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程<a href="http://mooc.study.163.com/course/USTC-1000029000" target="_blank" rel="external">http://mooc.study.163.com/course/USTC-1000029000</a></p>
 <p>本文将分析<a href="https://github.com/mengning/mykernel" target="_blank" rel="external">https://github.com/mengning/mykernel</a>中的一个简单调度器。</p>
 <p>内核的入口为mymain.c中的<code>void __init my_start_kernel(void)</code>，</p>
-<p><img src="/images/my_main.png" alt="my_main"></p>
+<img src="/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_main.png" alt="my_main" title="my_main">
 <p><code>my_start_kernel</code>初始化了task数组中的4个进程，即四个tPCB结构体。其中pid为进程号（0-3），ip均为my_process的地址，state均为-1（未运行），sp为栈顶位置（tPCB结构中）。所有进程以环形链表的方式组织在一起以便后续轮转调度。</p>
 <p>之后的一段汇编代码将0号进程的栈顶赋给esp，并调转到其ip的位置。</p>
-<p><img src="/images/my_process.png" alt="my_process"></p>
+<img src="/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_process.png" alt="my_process" title="my_process">
 <p>所有进程执行的代码均为<code>void my_process(void)</code>，其内容为每执行一段时间检查<code>my_need_sched</code>是否被置1，若是则执行<code>my_schedule()</code>主动让出执行。</p>
-<p><img src="/images/my_timer_handler.png" alt="my_timer_handler"></p>
+<img src="/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_timer_handler.png" alt="my_timer_handler" title="my_timer_handler">
 <p><code>my_timer_hanlder</code>响应了系统中的定时器中断，当定时器中断一定次数后将<code>my_need_sched</code>置1，以让当前进程主动让出。</p>
 <p>调度器的代码在<code>void my_schedule(void)</code>函数中，根据下一个进程（next）的状态（未运行或者运行中）执行不同的调度准备工作。</p>
-<p><img src="/images/my_schedule_1.png" alt="my_schedule_1"></p>
+<img src="/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_schedule_1.png" alt="my_schedule_1" title="my_schedule_1">
 <p>若下一进程正在运行中：保存当前的ebp到栈上，保存当前的esp到进程结构体中，从目标进程的结构体中回复esp，将下面跳转指令后面的地址作为返回地址保存到进程结构体中，跳转到目标进程。当从目标进程返回时，从栈上恢复ebp。</p>
-<p><img src="/images/my_schedule_2.png" alt="my_schedule_2"></p>
+<img src="/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_schedule_2.png" alt="my_schedule_2" title="my_schedule_2">
 <p>若下一进程未运行：唯一的区别是将目标进程的栈顶地址也赋给ebp（因为此时目标进程栈为空，且不会恢复ebp），其他部分和上面的情况相同。</p>
 <p>这几个函数配合则完成了一个简单的时间片轮转的多道程序内核。以下是内核执行时的进程切换：</p>
-<p><img src="/images/qemu.png" alt="qemu"></p>
+<img src="/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/qemu.png" alt="qemu" title="qemu">
 
       
     </div>
