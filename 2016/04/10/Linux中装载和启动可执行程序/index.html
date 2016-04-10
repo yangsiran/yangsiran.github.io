@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Linux," />
 
 
 
@@ -57,16 +57,23 @@
 
 
 
-<meta name="description">
+<meta name="description" content="杨斯然 原创作品转载请注明出处  《Linux内核分析》MOOC课程
+ELF可执行格式Linux中可执行文件以ELF格式组织。包括可执行程序（executable），目标文件（object）和共享库（shared library）。ELF文件中包括ELF header、Program header table（将文件组织为若干segment）、Section header table（将文件组织">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux中装载和启动可执行程序">
 <meta property="og:url" content="http://yangsiran.github.com/2016/04/10/Linux中装载和启动可执行程序/index.html">
 <meta property="og:site_name" content="Siran Yang | 杨斯然">
-<meta property="og:description">
-<meta property="og:updated_time" content="2016-04-10T09:42:14.000Z">
+<meta property="og:description" content="杨斯然 原创作品转载请注明出处  《Linux内核分析》MOOC课程
+ELF可执行格式Linux中可执行文件以ELF格式组织。包括可执行程序（executable），目标文件（object）和共享库（shared library）。ELF文件中包括ELF header、Program header table（将文件组织为若干segment）、Section header table（将文件组织">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg">
+<meta property="og:image" content="http://yangsiran.github.com/2016/04/10/Linux中装载和启动可执行程序/set_breaks.png">
+<meta property="og:image" content="http://yangsiran.github.com/2016/04/10/Linux中装载和启动可执行程序/breaks.png">
+<meta property="og:updated_time" content="2016-04-10T14:33:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux中装载和启动可执行程序">
-<meta name="twitter:description">
+<meta name="twitter:description" content="杨斯然 原创作品转载请注明出处  《Linux内核分析》MOOC课程
+ELF可执行格式Linux中可执行文件以ELF格式组织。包括可执行程序（executable），目标文件（object）和共享库（shared library）。ELF文件中包括ELF header、Program header table（将文件组织为若干segment）、Section header table（将文件组织">
+<meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg">
 
 
 
@@ -243,7 +250,30 @@
       
 
       
-        
+        <p>杨斯然 原创作品转载请注明出处  <a href="http://mooc.study.163.com/course/USTC-1000029000" target="_blank" rel="external">《Linux内核分析》MOOC课程</a></p>
+<h1 id="ELF可执行格式"><a href="#ELF可执行格式" class="headerlink" title="ELF可执行格式"></a>ELF可执行格式</h1><p>Linux中可执行文件以<a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format" target="_blank" rel="external">ELF格式</a>组织。包括可执行程序（executable），目标文件（object）和共享库（shared library）。ELF文件中包括ELF header、Program header table（将文件组织为若干segment）、Section header table（将文件组织为若干section），以及若干部分的数据。内核负责读取ELF文件，并将数据加载到进程内存空间对应的位置。</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg" alt="ELF"></p>
+<h1 id="Linux中的装载与链接"><a href="#Linux中的装载与链接" class="headerlink" title="Linux中的装载与链接"></a>Linux中的装载与链接</h1><p><a href="https://gist.github.com/yangsiran/731d976a3aa8842d667aa0b6dbdd8833" target="_blank" rel="external">https://gist.github.com/yangsiran/731d976a3aa8842d667aa0b6dbdd8833</a></p>
+<p>Linux中使用exec*系列的系统调用来加载程序，被加载的程序覆盖原有进程的空间，并从程序入口出开始执行。</p>
+<p>代码可以以库的形式组织，其中动态链接库可以被多个可执行程序共享。Linux中使用<code>ldd</code>可以查看程序所链接的动态库。动态库也可以使用<code>dlopen</code>来在运行时加载，使用<code>dlsym</code>可以从动态库中找到相应的符号。</p>
+<h1 id="内核对execve系统调用的处理"><a href="#内核对execve系统调用的处理" class="headerlink" title="内核对execve系统调用的处理"></a>内核对execve系统调用的处理</h1><p>在<a href="http://codelab.shiyanlou.com/xref/linux-3.18.6/fs/exec.c#1604" target="_blank" rel="external">exec.c</a>中我们可以看到定义系统调用<code>execve</code>的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE3(execve,</span><br><span class="line">		<span class="keyword">const</span> <span class="keyword">char</span> __user *, filename,</span><br><span class="line">		<span class="keyword">const</span> <span class="keyword">char</span> __user *<span class="keyword">const</span> __user *, argv,</span><br><span class="line">		<span class="keyword">const</span> <span class="keyword">char</span> __user *<span class="keyword">const</span> __user *, envp)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> do_execve(getname(filename), argv, envp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">do_execve</span><span class="params">(<span class="keyword">struct</span> filename *filename,</span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">char</span> __user *<span class="keyword">const</span> __user *__argv,</span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">char</span> __user *<span class="keyword">const</span> __user *__envp)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">struct</span> user_arg_ptr argv = &#123; .ptr.native = __argv &#125;;</span><br><span class="line">	<span class="keyword">struct</span> user_arg_ptr envp = &#123; .ptr.native = __envp &#125;;</span><br><span class="line">	<span class="keyword">return</span> do_execve_common(filename, argv, envp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">do_execve_common</span><span class="params">(<span class="keyword">struct</span> filename *filename,</span><br><span class="line">				<span class="keyword">struct</span> user_arg_ptr argv,</span><br><span class="line">				<span class="keyword">struct</span> user_arg_ptr envp)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/* ... */</span></span><br><span class="line">	<span class="keyword">struct</span> linux_binprm *bprm;</span><br><span class="line">	<span class="keyword">struct</span> file *file = do_open_exec(filename);</span><br><span class="line">	copy_strings(bprm-&gt;envc, envp, bprm);</span><br><span class="line">	copy_strings(bprm-&gt;argc, argv, bprm);</span><br><span class="line">	exec_binprm(bprm);	<span class="comment">/* search_binary_handler(bprm); */</span></span><br><span class="line">	<span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>search_binary_handler</code>查找合适的handler来加载二进制可执行文件。<a href="http://codelab.shiyanlou.com/xref/linux-3.18.6/fs/exec.c#1352" target="_blank" rel="external">exec.c</a>中可以看到一段遍历格式的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> linux_binfmt *fmt;</span><br><span class="line"></span><br><span class="line">list_for_each_entry(fmt, &amp;formats, lh) &#123;</span><br><span class="line">	<span class="keyword">if</span> (!try_module_get(fmt-&gt;module))</span><br><span class="line">		<span class="keyword">continue</span>;</span><br><span class="line">	fmt-&gt;load_binary(bprm);</span><br><span class="line">	<span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里<code>&amp;formats</code>是包含所有可执行文件格式的链表，在<a href="http://codelab.shiyanlou.com/xref/linux-3.18.6/fs/binfmt_elf.c#82" target="_blank" rel="external">binfmt_elf.c</a>中我们可以看到关于ELF格式的节点：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">struct</span> linux_binfmt elf_format = &#123;</span><br><span class="line">	.module		= THIS_MODULE,</span><br><span class="line">	.load_binary	= load_elf_binary,</span><br><span class="line">	.load_shlib	= load_elf_library,</span><br><span class="line">	.core_dump	= elf_core_dump,</span><br><span class="line">	.min_coredump	= ELF_EXEC_PAGESIZE,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中<code>load_elf_binary</code>为处理ELF格式加载逻辑的函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">load_elf_binary</span><span class="params">(<span class="keyword">struct</span> linux_binprm *bprm)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> * elf_interpreter；</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* ... */</span></span><br><span class="line">	<span class="keyword">if</span> (elf_interpreter)</span><br><span class="line">		elf_entry = load_elf_interp(&amp;loc-&gt;interp_elf_ex,</span><br><span class="line">					    interpreter,</span><br><span class="line">					    &amp;interp_map_addr,</span><br><span class="line">					    load_bias);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		elf_entry = loc-&gt;elf_ex.e_entry;</span><br><span class="line"></span><br><span class="line">	start_thread(regs, elf_entry, bprm-&gt;p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除了各种格式的处理之外，如果可执行文件用到了外部的动态共享库，内核则会将返回位置设置为loader的入口，将控制权转交给loader，由loader进行共享库的查找、加载，调转到程序入口；否则内核将返回位置设置为程序入口<code>loc-&gt;elf_ex.e_entry</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span></span><br><span class="line"><span class="title">start_thread</span><span class="params">(<span class="keyword">struct</span> pt_regs *regs, <span class="keyword">unsigned</span> <span class="keyword">long</span> new_ip, <span class="keyword">unsigned</span> <span class="keyword">long</span> new_sp)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	set_user_gs(regs, <span class="number">0</span>);</span><br><span class="line">	regs-&gt;fs		= <span class="number">0</span>;</span><br><span class="line">	regs-&gt;ds		= __USER_DS;</span><br><span class="line">	regs-&gt;es		= __USER_DS;</span><br><span class="line">	regs-&gt;ss		= __USER_DS;</span><br><span class="line">	regs-&gt;cs		= __USER_CS;</span><br><span class="line">	regs-&gt;ip		= new_ip;</span><br><span class="line">	regs-&gt;sp		= new_sp;</span><br><span class="line">	regs-&gt;flags		= X86_EFLAGS_IF;</span><br><span class="line">	set_thread_flag(TIF_NOTIFY_RESUME);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>start_thread</code>设置内核栈顶的寄存器，使得进程从中断中返回后可到达合适的位置。</p>
+<h1 id="使用gdb跟踪execve系统调用"><a href="#使用gdb跟踪execve系统调用" class="headerlink" title="使用gdb跟踪execve系统调用"></a>使用gdb跟踪execve系统调用</h1><p>我们在<a href="https://github.com/mengning/menu/blob/master/test_exec.c" target="_blank" rel="external">menu</a>中加入<code>fork</code>一个子进程并加载<code>hello</code>的命令<em>exec</em>。</p>
+<p>我们使用gdb在上述提到的几个处理函数的入口设置断点：</p>
+<img src="/2016/04/10/Linux中装载和启动可执行程序/set_breaks.png" alt="设置断点" title="设置断点">
+<p>可以看到内核在处理可执行文件加载时的确停在了这些位置上：</p>
+<img src="/2016/04/10/Linux中装载和启动可执行程序/breaks.png" alt="断点" title="断点">
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>当我们在Linux下执行一个新程序的时候，一般来说需要进行装载和链接两个动作。其中装载由内核中断处理函数完成，如需要进行动态库的链接，内核则会将控制权交给loader让其完成工作。程序员也可以在程序运行的过程中自行调用loader进行动态库的加载和符号的解析。</p>
+
       
     </div>
 
@@ -254,6 +284,12 @@
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag">#Linux</a>
+          
+        </div>
       
 
       
@@ -378,7 +414,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ELF可执行格式"><span class="nav-number">1.</span> <span class="nav-text">ELF可执行格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux中的装载与链接"><span class="nav-number">2.</span> <span class="nav-text">Linux中的装载与链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内核对execve系统调用的处理"><span class="nav-number">3.</span> <span class="nav-text">内核对execve系统调用的处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用gdb跟踪execve系统调用"><span class="nav-number">4.</span> <span class="nav-text">使用gdb跟踪execve系统调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
