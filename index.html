@@ -49,9 +49,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yangsiran.github.com"></form>
@@ -86,7 +86,6 @@
       
         <p>杨斯然 原创作品转载请注明出处  <a href="http://mooc.study.163.com/course/USTC-1000029000" target="_blank" rel="external">《Linux内核分析》MOOC课程</a></p>
 <h1 id="ELF可执行格式"><a href="#ELF可执行格式" class="headerlink" title="ELF可执行格式"></a>ELF可执行格式</h1><p>Linux中可执行文件以<a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format" target="_blank" rel="external">ELF格式</a>组织。包括可执行程序（executable），目标文件（object）和共享库（shared library）。ELF文件中包括ELF header、Program header table（将文件组织为若干segment）、Section header table（将文件组织为若干section），以及若干部分的数据。内核负责读取ELF文件，并将数据加载到进程内存空间对应的位置。</p>
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Elf-layout--en.svg" alt="ELF"></p>
 <h1 id="Linux中的装载与链接"><a href="#Linux中的装载与链接" class="headerlink" title="Linux中的装载与链接"></a>Linux中的装载与链接</h1><p><a href="https://gist.github.com/yangsiran/731d976a3aa8842d667aa0b6dbdd8833" target="_blank" rel="external">https://gist.github.com/yangsiran/731d976a3aa8842d667aa0b6dbdd8833</a></p>
 <p>Linux中使用exec*系列的系统调用来加载程序，被加载的程序覆盖原有进程的空间，并从程序入口出开始执行。</p>
 <p>代码可以以库的形式组织，其中动态链接库可以被多个可执行程序共享。Linux中使用<code>ldd</code>可以查看程序所链接的动态库。动态库也可以使用<code>dlopen</code>来在运行时加载，使用<code>dlsym</code>可以从动态库中找到相应的符号。</p>
@@ -111,7 +110,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yangsiran.github.com/2016/04/10/Linux中装载和启动可执行程序/" data-id="cimvgws0x0000swv9rymh1l9v" class="article-share-link">Share</a>
+      <a data-url="http://yangsiran.github.com/2016/04/10/Linux中装载和启动可执行程序/" data-id="cimvgws0x0000swv9rymh1l9v" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -185,7 +184,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/" data-id="cimvgws170002swv9m8z49zl6" class="article-share-link">Share</a>
+      <a data-url="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/" data-id="cimvgws170002swv9m8z49zl6" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -256,7 +255,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yangsiran.github.com/2016/03/27/system-call中断的处理过程/" data-id="cimvgws1s0005swv9zbo0hdnc" class="article-share-link">Share</a>
+      <a data-url="http://yangsiran.github.com/2016/03/27/system-call中断的处理过程/" data-id="cimvgws1s0005swv9zbo0hdnc" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -347,7 +346,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yangsiran.github.com/2016/03/20/系统调用的两种使用方式/" data-id="cimvgws2h0009swv9ru53xdhe" class="article-share-link">Share</a>
+      <a data-url="http://yangsiran.github.com/2016/03/20/系统调用的两种使用方式/" data-id="cimvgws2h0009swv9ru53xdhe" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -406,7 +405,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/" data-id="cimvgws2q000cswv946d7r2yt" class="article-share-link">Share</a>
+      <a data-url="http://yangsiran.github.com/2016/03/13/跟踪Linux内核的启动过程/" data-id="cimvgws2q000cswv946d7r2yt" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -461,7 +460,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/" data-id="cimvgws240007swv9lcdntdfp" class="article-share-link">Share</a>
+      <a data-url="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/" data-id="cimvgws240007swv9lcdntdfp" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -573,7 +572,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yangsiran.github.com/2016/02/28/一个简单C程序的反汇编/" data-id="cimvgws1e0004swv9wigqjp0o" class="article-share-link">Share</a>
+      <a data-url="http://yangsiran.github.com/2016/02/28/一个简单C程序的反汇编/" data-id="cimvgws1e0004swv9wigqjp0o" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -596,7 +595,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">Mot-clés</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
     </div>
@@ -606,7 +605,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">Nuage de mot-clés</h3>
     <div class="widget tagcloud">
       <a href="/tags/Linux/" style="font-size: 10px;">Linux</a>
     </div>
@@ -625,7 +624,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
         
@@ -662,7 +661,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2016 Siran Yang<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
