@@ -10,22 +10,22 @@
 1234567891011121314151617181920212223242526">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux内核创建一个新进程的过程">
-<meta property="og:url" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/index.html">
+<meta property="og:url" content="http://blog.sirany.me/2016/04/03/Linux内核创建一个新进程的过程/index.html">
 <meta property="og:site_name" content="Siran Yang | 杨斯然">
 <meta property="og:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程
 存储进程信息的task_structsched.h中的task_struct结构体存储了各个进程相关的信息。这个结构体的定义也比较长，并且含有许多根据条件编译的成员。以下截取一些重要的内容，可以看到内核中所使用的数据结构是一些侵入式的十字链表：
 1234567891011121314151617181920212223242526">
-<meta property="og:image" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/do_fork.png">
-<meta property="og:image" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/dup_task_struct.png">
-<meta property="og:image" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/copy_thread.png">
-<meta property="og:image" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/ret_from_fork.png">
+<meta property="og:image" content="http://blog.sirany.me/2016/04/03/Linux内核创建一个新进程的过程/do_fork.png">
+<meta property="og:image" content="http://blog.sirany.me/2016/04/03/Linux内核创建一个新进程的过程/dup_task_struct.png">
+<meta property="og:image" content="http://blog.sirany.me/2016/04/03/Linux内核创建一个新进程的过程/copy_thread.png">
+<meta property="og:image" content="http://blog.sirany.me/2016/04/03/Linux内核创建一个新进程的过程/ret_from_fork.png">
 <meta property="og:updated_time" content="2016-04-11T04:36:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux内核创建一个新进程的过程">
 <meta name="twitter:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程
 存储进程信息的task_structsched.h中的task_struct结构体存储了各个进程相关的信息。这个结构体的定义也比较长，并且含有许多根据条件编译的成员。以下截取一些重要的内容，可以看到内核中所使用的数据结构是一些侵入式的十字链表：
 1234567891011121314151617181920212223242526">
-<meta name="twitter:image" content="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/do_fork.png">
+<meta name="twitter:image" content="http://blog.sirany.me/2016/04/03/Linux内核创建一个新进程的过程/do_fork.png">
   
     <link rel="alternate" href="/atom.xml" title="Siran Yang | 杨斯然" type="application/atom+xml">
   
@@ -66,7 +66,7 @@
         <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yangsiran.github.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.sirany.me"></form>
       </div>
     </div>
   </div>
@@ -134,7 +134,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yangsiran.github.com/2016/04/03/Linux内核创建一个新进程的过程/" data-id="cimvngltl0001r6v9vbvk8488" class="article-share-link">Share</a>
+      <a data-url="http://blog.sirany.me/2016/04/03/Linux内核创建一个新进程的过程/" data-id="cimvngltl0001r6v9vbvk8488" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>

@@ -12,19 +12,19 @@
 my_start_kerne">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一个简单的时间片轮转多道程序内核代码分析">
-<meta property="og:url" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/index.html">
+<meta property="og:url" content="http://blog.sirany.me/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/index.html">
 <meta property="og:site_name" content="Siran Yang | 杨斯然">
 <meta property="og:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程http://mooc.study.163.com/course/USTC-1000029000
 本文将分析https://github.com/mengning/mykernel中的一个简单调度器。
 内核的入口为mymain.c中的void __init my_start_kernel(void)，
 
 my_start_kerne">
-<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_main.png">
-<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_process.png">
-<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_timer_handler.png">
-<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_schedule_1.png">
-<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_schedule_2.png">
-<meta property="og:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/qemu.png">
+<meta property="og:image" content="http://blog.sirany.me/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_main.png">
+<meta property="og:image" content="http://blog.sirany.me/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_process.png">
+<meta property="og:image" content="http://blog.sirany.me/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_timer_handler.png">
+<meta property="og:image" content="http://blog.sirany.me/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_schedule_1.png">
+<meta property="og:image" content="http://blog.sirany.me/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_schedule_2.png">
+<meta property="og:image" content="http://blog.sirany.me/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/qemu.png">
 <meta property="og:updated_time" content="2016-04-04T03:05:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个简单的时间片轮转多道程序内核代码分析">
@@ -33,7 +33,7 @@ my_start_kerne">
 内核的入口为mymain.c中的void __init my_start_kernel(void)，
 
 my_start_kerne">
-<meta name="twitter:image" content="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_main.png">
+<meta name="twitter:image" content="http://blog.sirany.me/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/my_main.png">
   
     <link rel="alternate" href="/atom.xml" title="Siran Yang | 杨斯然" type="application/atom+xml">
   
@@ -74,7 +74,7 @@ my_start_kerne">
         <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yangsiran.github.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.sirany.me"></form>
       </div>
     </div>
   </div>
@@ -123,7 +123,7 @@ my_start_kerne">
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yangsiran.github.com/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/" data-id="cimvnglud0008r6v9fbhpe56n" class="article-share-link">Share</a>
+      <a data-url="http://blog.sirany.me/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/" data-id="cimvnglud0008r6v9fbhpe56n" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
