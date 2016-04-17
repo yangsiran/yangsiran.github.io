@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.sirany.me/"/>
-  <updated>2016-04-11T04:31:18.000Z</updated>
+  <updated>2016-04-17T08:13:41.000Z</updated>
   <id>http://blog.sirany.me/</id>
   
   <author>
@@ -14,6 +14,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux中的进程调度与进程切换</title>
+    <link href="http://blog.sirany.me/2016/04/15/Linux%E4%B8%AD%E7%9A%84%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E4%B8%8E%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2/"/>
+    <id>http://blog.sirany.me/2016/04/15/Linux中的进程调度与进程切换/</id>
+    <published>2016-04-15T10:22:13.000Z</published>
+    <updated>2016-04-17T08:13:41.000Z</updated>
+    
+    <content type="html">&lt;p&gt;杨斯然 原创作品转载请注明出处 &lt;a href=&quot;http://mooc.study.163.com/course/USTC-1000029000&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《Linux内核分析》MOOC课程&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;杨斯然 原创作品转载请注明出处 &lt;a href=&quot;http://mooc.study.163.com/course/USTC-1000029000&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《Linux内核分析》MOOC课程&lt;/a&gt;&lt;/p&gt;
+
+    
+    </summary>
+    
+    
+      <category term="Linux" scheme="http://blog.sirany.me/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux中装载和启动可执行程序</title>
@@ -174,7 +196,7 @@
     <link href="http://blog.sirany.me/2016/03/20/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E4%B8%A4%E7%A7%8D%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/"/>
     <id>http://blog.sirany.me/2016/03/20/系统调用的两种使用方式/</id>
     <published>2016-03-20T06:12:26.000Z</published>
-    <updated>2016-04-14T00:57:21.000Z</updated>
+    <updated>2016-04-15T11:48:08.000Z</updated>
     
     <content type="html">&lt;p&gt;杨斯然 原创作品转载请注明出处 &lt;a href=&quot;http://mooc.study.163.com/course/USTC-1000029000&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《Linux内核分析》MOOC课程&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;本文以两段调用Linux系统调用的代码为例分析Linux系统调用的工作方式。&lt;/p&gt;
@@ -229,6 +251,9 @@
 &lt;p&gt;通过对两段程序的编译执行，我们可以看到它们完成了一样的工作。&lt;/p&gt;
 &lt;img src=&quot;/2016/03/20/系统调用的两种使用方式/sys_call.png&quot; alt=&quot;sys_call&quot; title=&quot;sys_call&quot;&gt;
 &lt;h1 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h1&gt;&lt;p&gt;操作系统内核实际上可以视为由一组ISR组成，CPU捕获到中断后陷入到内核态并进入相应的ISR来响应不同的系统事件。系统调用封装了对底层硬件的操作，由内核完成。其使用也是通过中断这一方式。&lt;/p&gt;
+&lt;h2 id=&quot;参考资料&quot;&gt;&lt;a href=&quot;#参考资料&quot; class=&quot;headerlink&quot; title=&quot;参考资料&quot;&gt;&lt;/a&gt;参考资料&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.packagecloud.io/eng/2016/04/05/the-definitive-guide-to-linux-system-calls/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;The Definitive Guide to Linux System Calls&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </content>
     
     <summary type="html">
