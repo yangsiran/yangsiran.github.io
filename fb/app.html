@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Facebook Page Helper</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <div class="container">
+      <h1>Facebook Page Helper</h1>
+      <br>
+      <form id="query" disabled>
+        <input id="postid" type="text" class="form-control" placeholder="Post Id" aria-describedby="basic-addon1" required>
+        <br>
+        <button id="submit-btn" type="submit" class="btn btn-primary btn-block" disabled>GO</button>
+      </form>
+      <br>
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Statistics</h2>
+          <p id="result"></p>
+        </div>
+        <div class="col-md-6">
+          <h2>Data</h2>
+          <button id="export" type="button" class="btn btn-default">Export</button> 
+        </div>
+      </div>
+    </div>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/FileSaver.min.js"></script>
+    <script src="js/xlsx.core.min.js"></script>
+    <script src="js/sheet.js"></script>
+    <script>
+(function() {
+  $(document).ready(function () {
+    var wbout, postid, $result = $('#result');
+    $('#query').submit(function (e) {
+      postid = $('#postid').val();
+      $result.html('');
+      FB.api('/' + postid + '/comments', 'GET', {limit: 0, summary: 1}, function(res) {
+        FB.api('/' + postid + '/comments', 'GET', {
+          limit: res.summary.total_count,
+          fields: 'created_time,from,message,comments,user_likes,like_count'
+        }, function(res) {
+          var comments = res.data, count = {};
+          for (var i = 0; i < comments.length; ++i) {
+          var name = comments[i].from.name;
+          if (count[name])
+            count[name]++;
+          else
+            count[name] = 1;
+          }
+          var sorted_cnt = [];
+          for (var user in count)
+            sorted_cnt.push({k:user, v:count[user]});
+          sorted_cnt.sort(function(a, b) { return b.v - a.v; });
+          var total = 0;
+          for (var i = 0; i < sorted_cnt.length; ++i) {
+            $result.append(document.createTextNode(sorted_cnt[i].k + ' : ' + sorted_cnt[i].v));
+            $result.append('<br>');
+            total += sorted_cnt[i].v;
+          }
+          $result.append(document.createTextNode('# of total : ' + total));
+  
+          var sheet = [['created_time', 'from', 'message', 'replys', 'user_likes', 'like_count']];
+          for (var i = 0; i < comments.length; ++i) {
+            var created_time = new Date(comments[i].created_time),
+                from = comments[i].from.name,
+                message = comments[i].message,
+                replys = [],
+                user_likes = comments[i].user_likes,
+                like_count = comments[i].like_count;
+            if (comments[i].comments) {
+              for (var j = 0; j < comments[i].comments.data.length; ++j) {
+                var reply = comments[i].comments.data[j];
+                replys.push(reply.from.name + ' : ' + reply.message);
+              }
+            }
+            replys = replys.join(', ');
+            sheet.push([created_time, from, message, replys, user_likes, like_count]);
+          }
+  
+          ws_name = postid;
+          var wb = new Workbook(), ws = sheet_from_array_of_arrays(sheet);
+  
+          wb.SheetNames.push(ws_name);
+          wb.Sheets[ws_name] = ws;
+          wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+        });
+      });
+      
+      e.preventDefault();
+    });
+
+    $('#export').click(function () {
+      saveAs(new Blob([s2ab(wbout)],{type:'application/octet-stream'}), postid + '.xlsx')
+    });
+
+    $.ajaxSetup({ cache: true });
+    $.getScript('//connect.facebook.net/en_US/sdk.js', function () {
+      FB.init({
+        appId: '953787418010197',
+        version: 'v2.5'
+      });     
+      FB.getLoginStatus(function (res) {
+        if (res.status !== 'connected') {
+          window.location.href =
+            'https://www.facebook.com/dialog/oauth?client_id=953787418010197&redirect_uri=' +
+            window.location.href + '&scope=user_posts';
+        } else {
+          $('#submit-btn').removeAttr('disabled');
+        }
+      });
+    });
+  });
+})();
+    </script>
+  </body>
+</html>
