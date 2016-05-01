@@ -83,41 +83,18 @@
 
 
 <meta name="description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程
-本文以两段调用Linux系统调用的代码为例分析Linux系统调用的工作方式。
-系统调用的介绍系统调用的实际实现方式为由特殊指令 int 0x80 发起一个软中断。CPU捕获到中断后，保存程序的上下文到栈上，包括：
-
-堆栈顶地址；
-状态字；
-cs:eip 的值。
-
-然后根据中断的类型从中断向量表中选择对应的中断服务例程（ISR）的地">
+《Linux内核分析》 是由科大软院孟宁老师开设的一门MOOC课程。这门课以前在科大也有线下版本，是本科生可以选修的公选课。据说因为上的人太少现在已经不开了，很遗憾没能在学校赶上这门课程。不过这次有机会以MOOC的形式参与到这门课当中，也算是完成了一个心愿。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="系统调用的两种使用方式">
-<meta property="og:url" content="http://blog.sirany.me/2016/03/20/系统调用的两种使用方式/index.html">
+<meta property="og:title" content="Linux内核学习小结">
+<meta property="og:url" content="http://blog.sirany.me/2016/04/28/Linux内核学习小结/index.html">
 <meta property="og:site_name" content="Siran Yang">
 <meta property="og:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程
-本文以两段调用Linux系统调用的代码为例分析Linux系统调用的工作方式。
-系统调用的介绍系统调用的实际实现方式为由特殊指令 int 0x80 发起一个软中断。CPU捕获到中断后，保存程序的上下文到栈上，包括：
-
-堆栈顶地址；
-状态字；
-cs:eip 的值。
-
-然后根据中断的类型从中断向量表中选择对应的中断服务例程（ISR）的地">
-<meta property="og:image" content="http://blog.sirany.me/2016/03/20/系统调用的两种使用方式/sys_call.png">
-<meta property="og:updated_time" content="2016-04-18T00:56:04.000Z">
+《Linux内核分析》 是由科大软院孟宁老师开设的一门MOOC课程。这门课以前在科大也有线下版本，是本科生可以选修的公选课。据说因为上的人太少现在已经不开了，很遗憾没能在学校赶上这门课程。不过这次有机会以MOOC的形式参与到这门课当中，也算是完成了一个心愿。">
+<meta property="og:updated_time" content="2016-05-01T09:30:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="系统调用的两种使用方式">
+<meta name="twitter:title" content="Linux内核学习小结">
 <meta name="twitter:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程
-本文以两段调用Linux系统调用的代码为例分析Linux系统调用的工作方式。
-系统调用的介绍系统调用的实际实现方式为由特殊指令 int 0x80 发起一个软中断。CPU捕获到中断后，保存程序的上下文到栈上，包括：
-
-堆栈顶地址；
-状态字；
-cs:eip 的值。
-
-然后根据中断的类型从中断向量表中选择对应的中断服务例程（ISR）的地">
-<meta name="twitter:image" content="http://blog.sirany.me/2016/03/20/系统调用的两种使用方式/sys_call.png">
+《Linux内核分析》 是由科大软院孟宁老师开设的一门MOOC课程。这门课以前在科大也有线下版本，是本科生可以选修的公选课。据说因为上的人太少现在已经不开了，很遗憾没能在学校赶上这门课程。不过这次有机会以MOOC的形式参与到这门课当中，也算是完成了一个心愿。">
 
 
 
@@ -135,7 +112,7 @@ cs:eip 的值。
   };
 </script>
 
-  <title> 系统调用的两种使用方式 | Siran Yang </title>
+  <title> Linux内核学习小结 | Siran Yang </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -255,7 +232,7 @@ cs:eip 的值。
             
             
               
-                系统调用的两种使用方式
+                Linux内核学习小结
               
             
           </h1>
@@ -267,8 +244,8 @@ cs:eip 的值。
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-03-20T14:12:26+08:00" content="2016-03-20">
-              2016-03-20
+            <time itemprop="dateCreated" datetime="2016-04-28T17:01:44+08:00" content="2016-04-28">
+              2016-04-28
             </time>
           </span>
 
@@ -296,61 +273,28 @@ cs:eip 的值。
 
       
         <p>杨斯然 原创作品转载请注明出处 <a href="http://mooc.study.163.com/course/USTC-1000029000" target="_blank" rel="external">《Linux内核分析》MOOC课程</a></p>
-<p>本文以两段调用Linux系统调用的代码为例分析Linux系统调用的工作方式。</p>
-<h1 id="系统调用的介绍"><a href="#系统调用的介绍" class="headerlink" title="系统调用的介绍"></a>系统调用的介绍</h1><p>系统调用的实际实现方式为由特殊指令 <code>int 0x80</code> 发起一个软中断。CPU捕获到中断后，保存程序的上下文到栈上，包括：</p>
-<ol>
-<li>堆栈顶地址；</li>
-<li>状态字；</li>
-<li><code>cs:eip</code> 的值。</li>
-</ol>
-<p>然后根据中断的类型从中断向量表中选择对应的中断服务例程（ISR）的地址载入<code>cs:eip</code>，CPU进入内核态开始执行ISR。在系统调用的情况下（0x80中断），ISR会根据传入的的系统调用号调用具体的实现函数来响应系统调用。当ISR完成工作后，会从栈上恢复这些上下文。</p>
-<p>在x86架构中，系统调用的参数传递使用寄存器来完成：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Syscall #</th>
-<th style="text-align:center">Param 1</th>
-<th style="text-align:center">Param 2</th>
-<th style="text-align:center">Param 3</th>
-<th style="text-align:center">Param 4</th>
-<th style="text-align:center">Param 5</th>
-<th style="text-align:center">Param 6</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">eax</td>
-<td style="text-align:center">ebx</td>
-<td style="text-align:center">ecx</td>
-<td style="text-align:center">edx</td>
-<td style="text-align:center">esi</td>
-<td style="text-align:center">edi</td>
-<td style="text-align:center">ebp</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Return value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">eax</td>
-</tr>
-</tbody>
-</table>
-<p>当然，实际的使用中操作系统通常将系统调用封装成C函数，程序员只需要引入适当的头文件并调用对应的函数即可完成相应的系统调用。而这些封装后的C API的实现上也使用了<code>int $0x80</code>指令来完成具体的工作。</p>
+<p><a href="http://mooc.study.163.com/course/USTC-1000029000" target="_blank" rel="external">《Linux内核分析》</a> 是由科大软院孟宁老师开设的一门MOOC课程。这门课以前在科大也有线下版本，是本科生可以选修的公选课。据说因为上的人太少现在已经不开了，很遗憾没能在学校赶上这门课程。不过这次有机会以MOOC的形式参与到这门课当中，也算是完成了一个心愿。</p>
 <a id="more"></a>
-<h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><p>以下我们分别使用这两种方式来完成对<code>write</code>的系统调用：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *greeting = <span class="string">"hello, world\n"</span>;</span><br><span class="line">    <span class="keyword">return</span> write(<span class="number">1</span>, greeting, <span class="number">14</span>) &gt;= <span class="number">0</span> ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>对<code>int $0x80</code>的直接调用使用内嵌汇编来完成：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *greeting = <span class="string">"hello, world\n"</span>;</span><br><span class="line">    <span class="keyword">int</span> ret;</span><br><span class="line">    <span class="keyword">asm</span> (<span class="string">"mov $1, %%ebx\n\t"</span></span><br><span class="line">         <span class="string">"mov $14, %%edx\n\t"</span></span><br><span class="line">         <span class="string">"mov $4, %%eax\n\t"</span></span><br><span class="line">         <span class="string">"int $0x80\n\t"</span></span><br><span class="line">         <span class="string">"mov %%eax, %0"</span></span><br><span class="line">         : <span class="string">"=m"</span>(ret)</span><br><span class="line">         : <span class="string">"c"</span>(greeting));</span><br><span class="line">    <span class="keyword">return</span> ret &gt;= <span class="number">0</span> ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>通过对两段程序的编译执行，我们可以看到它们完成了一样的工作。</p>
-<img src="/2016/03/20/系统调用的两种使用方式/sys_call.png" alt="sys_call" title="sys_call">
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>操作系统内核实际上可以视为由一组ISR组成，CPU捕获到中断后陷入到内核态并进入相应的ISR来响应不同的系统事件。系统调用封装了对底层硬件的操作，由内核完成。其使用也是通过中断这一方式。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
-<li><a href="http://blog.packagecloud.io/eng/2016/04/05/the-definitive-guide-to-linux-system-calls/" target="_blank" rel="external">The Definitive Guide to Linux System Calls</a></li>
+<p>对于程序员来说，学习内核，除了工作需要之外，一方面可以加深对系统的理解；另一方面Linux内核本身就是个优秀的软件工程，里面有很多值得学习的东西。Linux内核是个较为庞大的工程。本课程截取了一些重要的片段来进行原理和源码上的介绍，辅以GDB的调试，可以对Linux内核有一个初步的认知。</p>
+<p>本课程从基本的汇编知识开始，讲到了内核的启动过程，系统调用的接口与实现，内核中进程的创建、装载，与调度。这些部分组成了内核运行的基本机制。在任何一个时刻，系统处于三种状态之一：</p>
+<ol>
+<li>用户态，执行用户代码；</li>
+<li>内核态，用户上下文，处理进程相关内容；</li>
+<li>内核态，中断上下文，处理中断。</li>
+</ol>
+<p>而除此之外，Linux内核中还有许多本课程没有覆盖到的子系统，如中断、内存、信号、文件、IPC等。如果要了解更多的关于内核的信息，可以阅读<a href="http://www.amazon.com/Linux-Kernel-Development-Robert-Love/dp/0672329468/" target="_blank" rel="external">Linux Kernel Development</a>。</p>
+<p>关于操作系统方面的优秀教材有<a href="http://pages.cs.wisc.edu/~remzi/OSTEP/" target="_blank" rel="external">Operating Systems: Three Easy Pieces</a>。</p>
+<p>Linux内核是个庞然大物，想要一下子掌握实是不易。关于内核方面的实践还可以参考来自MIT的<a href="https://pdos.csail.mit.edu/6.828/2014/schedule.html" target="_blank" rel="external">xv6</a>，规模大约在1万行代码。</p>
+<p>本课程的作业部分是以博客的形式组织的，在这里列举出来，以供参考：</p>
+<ol>
+<li><a href="http://blog.sirany.me/2016/02/28/一个简单C程序的反汇编/">一个简单C程序的反汇编</a></li>
+<li><a href="http://blog.sirany.me/2016/03/06/一个简单的时间片轮转多道程序内核代码分析/">一个简单的时间片轮转多道程序内核代码分析</a></li>
+<li><a href="http://blog.sirany.me/2016/03/13/跟踪Linux内核的启动过程/">跟踪Linux内核的启动过程</a></li>
+<li><a href="http://blog.sirany.me/2016/03/20/系统调用的两种使用方式/">系统调用的两种使用方式</a></li>
+<li><a href="http://blog.sirany.me/2016/03/27/system-call中断的处理过程/">system_call中断的处理过程</a></li>
+<li><a href="http://blog.sirany.me/2016/04/03/Linux内核创建一个新进程的过程/">Linux内核创建一个新进程的过程</a></li>
+<li><a href="http://blog.sirany.me/2016/04/10/Linux中装载和启动可执行程序/">Linux中装载和启动可执行程序</a></li>
+<li><a href="http://blog.sirany.me/2016/04/15/Linux中的进程调度与进程切换/">Linux中的进程调度与进程切换</a></li>
 </ol>
 
       
@@ -381,17 +325,13 @@ cs:eip 的值。
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/03/13/跟踪Linux内核的启动过程/" rel="next" title="跟踪Linux内核的启动过程">
-                <i class="fa fa-chevron-left"></i> 跟踪Linux内核的启动过程
+              <a href="/2016/04/15/Linux中的进程调度与进程切换/" rel="next" title="Linux中的进程调度与进程切换">
+                <i class="fa fa-chevron-left"></i> Linux中的进程调度与进程切换
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/03/27/system-call中断的处理过程/" rel="prev" title="system_call中断的处理过程">
-                system_call中断的处理过程 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -505,7 +445,7 @@ cs:eip 的值。
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#系统调用的介绍"><span class="nav-number">1.</span> <span class="nav-text">系统调用的介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#例子"><span class="nav-number">2.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+              <p class="post-toc-empty">This post does not have a Table of Contents</p>
             
           </div>
         </section>
