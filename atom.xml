@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.sirany.me/"/>
-  <updated>2016-05-01T09:30:00.000Z</updated>
+  <updated>2016-05-02T00:16:16.000Z</updated>
   <id>http://blog.sirany.me/</id>
   
   <author>
@@ -20,13 +20,13 @@
     <link href="http://blog.sirany.me/2016/04/28/Linux%E5%86%85%E6%A0%B8%E5%AD%A6%E4%B9%A0%E5%B0%8F%E7%BB%93/"/>
     <id>http://blog.sirany.me/2016/04/28/Linux内核学习小结/</id>
     <published>2016-04-28T09:01:44.000Z</published>
-    <updated>2016-05-01T09:30:00.000Z</updated>
+    <updated>2016-05-02T00:16:16.000Z</updated>
     
     <content type="html">&lt;p&gt;杨斯然 原创作品转载请注明出处 &lt;a href=&quot;http://mooc.study.163.com/course/USTC-1000029000&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《Linux内核分析》MOOC课程&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;http://mooc.study.163.com/course/USTC-1000029000&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《Linux内核分析》&lt;/a&gt; 是由科大软院孟宁老师开设的一门MOOC课程。这门课以前在科大也有线下版本，是本科生可以选修的公选课。据说因为上的人太少现在已经不开了，很遗憾没能在学校赶上这门课程。不过这次有机会以MOOC的形式参与到这门课当中，也算是完成了一个心愿。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;p&gt;对于程序员来说，学习内核，除了工作需要之外，一方面可以加深对系统的理解；另一方面Linux内核本身就是个优秀的软件工程，里面有很多值得学习的东西。Linux内核是个较为庞大的工程。本课程截取了一些重要的片段来进行原理和源码上的介绍，辅以GDB的调试，可以对Linux内核有一个初步的认知。&lt;/p&gt;
-&lt;p&gt;本课程从基本的汇编知识开始，讲到了内核的启动过程，系统调用的接口与实现，内核中进程的创建、装载，与调度。这些部分组成了内核运行的基本机制。在任何一个时刻，系统处于三种状态之一：&lt;/p&gt;
+&lt;p&gt;本课程从基本的汇编知识开始，讲到了内核的启动过程，系统调用的接口与实现，内核中进程的创建、装载，与调度。这些部分组成了内核运行的基本机制。内核为运行在系统中的进程提供抽象，系统调用、异常，和中断是仅有的进入内核的接口。在任何一个时刻，系统处于三种状态之一：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;用户态，执行用户代码；&lt;/li&gt;
 &lt;li&gt;内核态，用户上下文，处理进程相关内容；&lt;/li&gt;
