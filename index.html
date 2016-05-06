@@ -375,7 +375,7 @@
 <h1 id="Linux中进程的调度时机"><a href="#Linux中进程的调度时机" class="headerlink" title="Linux中进程的调度时机"></a>Linux中进程的调度时机</h1><p>Linux中进程进行调度的时机有以下几个：</p>
 <ol>
 <li>中断处理过程中直接调用<code>schedule()</code>；</li>
-<li>中断处理完后返回用户态之前根据<code>need_resched</code>标记嗲用<code>schedule()</code></li>
+<li>中断处理完后返回用户态之前根据<code>need_resched</code>标记调用<code>schedule()</code></li>
 <li>内核线程主动调用<code>schedule()</code>。</li>
 </ol>
           <div class="post-more-link text-center">

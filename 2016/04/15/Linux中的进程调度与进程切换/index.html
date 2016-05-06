@@ -86,7 +86,7 @@
 Linux中进程的调度时机Linux中进程进行调度的时机有以下几个：
 
 中断处理过程中直接调用schedule()；
-中断处理完后返回用户态之前根据need_resched标记嗲用schedule()
+中断处理完后返回用户态之前根据need_resched标记调用schedule()
 内核线程主动调用schedule()。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux中的进程调度与进程切换">
@@ -96,20 +96,20 @@ Linux中进程的调度时机Linux中进程进行调度的时机有以下几个�
 Linux中进程的调度时机Linux中进程进行调度的时机有以下几个：
 
 中断处理过程中直接调用schedule()；
-中断处理完后返回用户态之前根据need_resched标记嗲用schedule()
+中断处理完后返回用户态之前根据need_resched标记调用schedule()
 内核线程主动调用schedule()。">
 <meta property="og:image" content="http://blog.sirany.me/2016/04/15/Linux中的进程调度与进程切换/breaks.png">
 <meta property="og:image" content="http://blog.sirany.me/2016/04/15/Linux中的进程调度与进程切换/schedule.png">
 <meta property="og:image" content="http://blog.sirany.me/2016/04/15/Linux中的进程调度与进程切换/pick_next_task_and_context_switch.png">
 <meta property="og:image" content="http://blog.sirany.me/2016/04/15/Linux中的进程调度与进程切换/ret_from_fork.png">
-<meta property="og:updated_time" content="2016-04-18T00:54:08.000Z">
+<meta property="og:updated_time" content="2016-05-06T00:34:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux中的进程调度与进程切换">
 <meta name="twitter:description" content="杨斯然 原创作品转载请注明出处 《Linux内核分析》MOOC课程
 Linux中进程的调度时机Linux中进程进行调度的时机有以下几个：
 
 中断处理过程中直接调用schedule()；
-中断处理完后返回用户态之前根据need_resched标记嗲用schedule()
+中断处理完后返回用户态之前根据need_resched标记调用schedule()
 内核线程主动调用schedule()。">
 <meta name="twitter:image" content="http://blog.sirany.me/2016/04/15/Linux中的进程调度与进程切换/breaks.png">
 
@@ -293,7 +293,7 @@ Linux中进程的调度时机Linux中进程进行调度的时机有以下几个�
 <h1 id="Linux中进程的调度时机"><a href="#Linux中进程的调度时机" class="headerlink" title="Linux中进程的调度时机"></a>Linux中进程的调度时机</h1><p>Linux中进程进行调度的时机有以下几个：</p>
 <ol>
 <li>中断处理过程中直接调用<code>schedule()</code>；</li>
-<li>中断处理完后返回用户态之前根据<code>need_resched</code>标记嗲用<code>schedule()</code></li>
+<li>中断处理完后返回用户态之前根据<code>need_resched</code>标记调用<code>schedule()</code></li>
 <li>内核线程主动调用<code>schedule()</code>。</li>
 </ol>
 <a id="more"></a>
